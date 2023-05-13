@@ -45,9 +45,6 @@ def transcribe():
             # Get the file size in bytes
             file_size = os.fstat(audio_file.fileno()).st_size
             print(f"The file size is {file_size} bytes.")
-
-            print("Transcribing")
-            transcription = openai.Audio.transcribe("whisper-1", audio_file)
             
             # Split the audio file into smaller chunks
             audio = AudioSegment.from_file(audio_file, format="mp4")
@@ -62,6 +59,7 @@ def transcribe():
                     temp_chunk_file.seek(0)
 
                     # Transcribe the chunk using the OpenAI whisper API
+                    print("Transcribing")
                     transcription = openai.Audio.transcribe("whisper-1", temp_chunk_file)
                     transcriptions.append(transcription["text"])
 
