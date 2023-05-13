@@ -73,7 +73,7 @@ def transcribe_worker():
             r.set('job:{}:transcription'.format(job_id), transcription["text"])
             
             # Update job status to 'completed'
-            r.set('job:{}:status'.format(job_id), 200 "complete")
+            r.set('job:{}:status'.format(job_id), 600, 'in progress')
         
         time.sleep(1)
 
