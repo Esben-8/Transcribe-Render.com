@@ -38,25 +38,23 @@ def transcribe():
     print(yt.title)
 
     if yt.length < max_length:
-        audio_file = open(os.path.join(temp_path, "temp_audio.mp4"), "rb")
+        result = {"Message": "Empty"}
         
         with open(os.path.join(temp_path, "temp_audio.mp4"), "rb") as audio_file:
             # Get the file size in bytes
             file_size = os.fstat(audio_file.fileno()).st_size
             print(f"The file size is {file_size} bytes.")
 
-        print("Transcribing")
-        transcription = openai.Audio.transcribe("whisper-1", audio_file)
+            print("Transcribing")
+            transcription = openai.Audio.transcribe("whisper-1", audio_file)
 
-        audio_file.close()
-
-        result = {
-            "script": transcription["text"],
-            "length": yt.length,
-            "title": yt.title,
-            "views": yt.views,
-            "description": yt.description
-        }
+            result = {
+                "script": transcription["text"],
+                "length": yt.length,
+                "title": yt.title,
+                "views": yt.views,
+                "description": yt.description
+            }
 
         return jsonify(result)
     else:
