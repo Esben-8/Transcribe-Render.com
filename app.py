@@ -43,6 +43,19 @@ def get_job_status(job_id):
     # Respond to user with job status
     return jsonify({'job_id': job_id, 'status': job_status.decode('utf-8')})
 
+
+# Set up a route for getting transcription
+@app.route('/transcription/<job_id>', methods=['GET'])
+def get_transcription(job_id):
+    # Get transcription from the database
+    transcription = r.get('job:{}:transcription'.format(job_id))
+    
+    if transcription is None:
+        return jsonify({'message': 'Transcription not found.'}), 404
+    
+    # Respond to user with transcription
+    return jsonify({'job_id': job_id, 'transcription': transcription.decode('utf-8')})
+
 # Set up a background worker to transcribe videos
 def transcribe_worker():
     while True:
