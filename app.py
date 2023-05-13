@@ -39,7 +39,8 @@ def transcribe():
 
         if yt.length < max_length:
             audio_file = open(os.path.join(temp_path, "temp_audio.mp4"), "rb")
-
+            
+            print("Transcribing")
             transcription = openai.Audio.transcribe("whisper-1", audio_file)
 
             audio_file.close()
@@ -60,5 +61,5 @@ def transcribe():
         os.remove(os.path.join(temp_path, "temp_audio.mp4"))
 
     except Exception as e:
-        traceback.print_exc()
-        return str(e), 500
+        print(e)
+        return {"Too long": str(e)}
