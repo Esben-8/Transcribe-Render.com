@@ -47,9 +47,25 @@ def transcribe():
 
             print("Transcribing")
             transcription = openai.Audio.transcribe("whisper-1", audio_file)
+            
+            # Split the audio file into smaller chunks
+            audio = AudioSegment.from_file(audio_file, format="mp4")
+            chunk_size = 10 * 60 * 1000
+            chunks = audio[:chunk_size]
+
+            transcriptions = []
+            for i, chunk in enumerate(chunks):
+                print(f"Transcribing chunk {i + 1}/{len(chunks)}")
+                with tempfile.NamedTemporaryFile(suffix=".mp4") as temp_chunk_file:
+                    chunk.export(temp_chunk_file.name, format="mp4")
+                    temp_chunk_file.seek(0)
+
+                    # Transcribe the chunk using the OpenAI whisper API
+                    transcription = openai.Audio.transcribe("whisper-1", temp_chunk_file)
+                    transcriptions.append(transcription["text"])
 
             result = {
-                "script": transcription["text"],
+                "script": " ".join(transcriptions),
                 "length": yt.length,
                 "title": yt.title,
                 "views": yt.views,
