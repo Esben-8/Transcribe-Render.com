@@ -2,3 +2,4 @@ Flask
 Gunicorn
 OpenAI
 PyTube
+pydub
