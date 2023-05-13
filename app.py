@@ -60,6 +60,6 @@ def transcribe():
 
         os.remove(os.path.join(temp_path, "temp_audio.mp4"))
 
-    except error:
+    except Exception as error:
         print(error)
         return jsonify({"Too long": str(error)})
