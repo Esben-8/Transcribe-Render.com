@@ -47,7 +47,7 @@ def transcribe():
                 # Transcribe the chunk using the OpenAI whisper API
                 print("Transcribing...")
                 transcription = openai.Audio.transcribe("whisper-1", audio_file)
-                print(transcription)
+                print("Process finished")
 
                 result = {
                     "script": transcription["text"],
@@ -56,8 +56,8 @@ def transcribe():
                     "views": yt.views,
                     "description": yt.description
                 }
-            
-            print("Proccess finished")
+
+            print(result)
             return jsonify(result)
         else:
             print(f"Video is longer than {int(round(max_length/60, 0))} minutes")
@@ -67,4 +67,3 @@ def transcribe():
 
     except Exception as error:
         print(error)
-        return make_response(jsonify(error), 500)
