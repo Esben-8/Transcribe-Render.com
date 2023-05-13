@@ -56,7 +56,7 @@ def transcribe_worker():
             api_key = json.loads(job_info[1])["api_key"]
             
             # Update job status to 'in progress'
-            r.setex('job:{}:status'.format(job_id), 86400, 'in progress')
+            r.set('job:{}:status'.format(job_id), 86400, 'in progress')
             
             # Create temp path
             temp_path = tempfile.gettempdir()
@@ -73,7 +73,7 @@ def transcribe_worker():
             r.set('job:{}:transcription'.format(job_id), transcription["text"])
             
             # Update job status to 'completed'
-            r.setex('job:{}:transcription'.format(job_id), 86400, transcription)
+            r.set('job:{}:status'.format(job_id), 200 "complete")
         
         time.sleep(1)
 
