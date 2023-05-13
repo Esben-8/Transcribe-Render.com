@@ -55,7 +55,7 @@ def transcribe():
             return jsonify(result)
         else:
             print(f"Video is longer than {int(round(max_length/60, 0))} minutes")
-            return f"Video is longer than {int(round(max_length/60, 0))} minutes"
+            return {message: f"Video is longer than {int(round(max_length/60, 0))} minutes"}
 
         os.remove(os.path.join(temp_path, "temp_audio.mp4"))
 
