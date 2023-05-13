@@ -40,7 +40,7 @@ def transcribe():
     if yt.length < max_length:
         audio_file = open(os.path.join(temp_path, "temp_audio.mp4"), "rb")
         
-        with open(audio_file_path, "rb") as audio_file:
+        with open(os.path.join(temp_path, "temp_audio.mp4"), "rb") as audio_file:
             # Get the file size in bytes
             file_size = os.fstat(audio_file.fileno()).st_size
             print(f"The file size of {audio_file_path} is {file_size} bytes.")
