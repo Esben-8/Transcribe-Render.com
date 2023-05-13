@@ -20,46 +20,46 @@ def hello():
 
 @app.route("/transcribe", methods=["GET"])
 def transcribe():
-    try:
-        video_id = str(request.args.get("id"))
-        url = f"https://www.youtube.com/watch?v={video_id}"
-        # print(url)
-        max_length = int(request.args.get("max_length"))
-        apikey = str(request.args.get("api_key"))
-        print(apikey)
+#     try:
+    video_id = str(request.args.get("id"))
+    url = f"https://www.youtube.com/watch?v={video_id}"
+    # print(url)
+    max_length = int(request.args.get("max_length"))
+    apikey = str(request.args.get("api_key"))
+    print(apikey)
 
-        openai.api_key = apikey
-        temp_path = tempfile.gettempdir()
-        yt = YouTube(url)
+    openai.api_key = apikey
+    temp_path = tempfile.gettempdir()
+    yt = YouTube(url)
 
-        print("Downloading")
-        yt.streams.filter(only_audio=True, file_extension="mp4").first().download(output_path=temp_path, filename="temp_audio.mp4")
+    print("Downloading")
+    yt.streams.filter(only_audio=True, file_extension="mp4").first().download(output_path=temp_path, filename="temp_audio.mp4")
 
-        print(yt.title)
+    print(yt.title)
 
-        if yt.length < max_length:
-            audio_file = open(os.path.join(temp_path, "temp_audio.mp4"), "rb")
-            
-            print("Transcribing")
-            transcription = openai.Audio.transcribe("whisper-1", audio_file)
+    if yt.length < max_length:
+        audio_file = open(os.path.join(temp_path, "temp_audio.mp4"), "rb")
 
-            audio_file.close()
+        print("Transcribing")
+        transcription = openai.Audio.transcribe("whisper-1", audio_file)
 
-            result = {
-                "script": transcription["text"],
-                "length": yt.length,
-                "title": yt.title,
-                "views": yt.views,
-                "description": yt.description
-            }
+        audio_file.close()
 
-            return jsonify(result)
-        else:
-            print(f"Video is longer than {int(round(max_length/60, 0))} minutes")
-            return {"Too long": f"Video is longer than {int(round(max_length/60, 0))} minutes"}
+        result = {
+            "script": transcription["text"],
+            "length": yt.length,
+            "title": yt.title,
+            "views": yt.views,
+            "description": yt.description
+        }
 
-        os.remove(os.path.join(temp_path, "temp_audio.mp4"))
+        return jsonify(result)
+    else:
+        print(f"Video is longer than {int(round(max_length/60, 0))} minutes")
+        return {"Too long": f"Video is longer than {int(round(max_length/60, 0))} minutes"}
 
-    except Exception as error:
-        print(error)
-        return jsonify({"Too long": str(error)})
+    os.remove(os.path.join(temp_path, "temp_audio.mp4"))
+
+#     except Exception as error:
+#         print(error)
+#         return jsonify({"Too long": str(error)})
