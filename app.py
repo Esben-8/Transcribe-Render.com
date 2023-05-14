@@ -50,5 +50,5 @@ def transcribe_video():
     return jsonify({'job_id': job_id, 'message': 'Transcription job is being processed.', "data": transcription["text"]})
 
 
-if __name__ == "__main__:
+if __name__ == "__main__":
     app.run()
