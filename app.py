@@ -35,7 +35,7 @@ def transcribe_video():
         transcription = openai.Audio.transcribe("whisper-1", audio_file, api_key
     
     # Respond to user with job ID and message
-    return jsonify({'job_id': job_id, 'message': 'Transcription job is being processed.', data: transcription["text"]})
+    return jsonify({'job_id': job_id, 'message': 'Transcription job is being processed.', "data": transcription["text"]})
         
 
 if __name__ == '__main__':
