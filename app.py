@@ -47,7 +47,7 @@ def transcribe_video():
     # r.lpush('qstash:transcription_jobs', json.dumps({'job_id': job_id, 'video_url': video_url, "max_length": max_length, "api_key": api_key}))
 
     # Respond to user with job ID and message
-    return jsonify({'job_id': job_id, 'message': 'Transcription job is being processed.', "data": transcription["text"]})
+    return jsonify({'job_id': job_id, 'message': 'Transcription job is being processed.', "data": transcription["text"], 'title': youtube.title, 'description': youtube.description, 'views': youtube.views, 'length': youtube.length})
 
 
 if __name__ == "__main__":
