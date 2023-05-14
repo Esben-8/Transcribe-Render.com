@@ -24,6 +24,7 @@ def transcribe_video():
     video_url = request.form['video_url']
     max_length = request.form["max_length"]
     api_key = request.form["api_key"]
+    user_id = request.form["user_id"]
 
 
     # Create temp path
@@ -47,7 +48,7 @@ def transcribe_video():
     # r.lpush('qstash:transcription_jobs', json.dumps({'job_id': job_id, 'video_url': video_url, "max_length": max_length, "api_key": api_key}))
 
     # Respond to user with job ID and message
-    return jsonify({'job_id': job_id, 'message': 'Transcription job is being processed.', "data": transcription["text"], 'title': youtube.title, 'description': youtube.description, 'views': youtube.views, 'length': youtube.length})
+    return jsonify({'job_id': job_id, 'message': 'Transcription job is being processed.', "data": transcription["text"], 'title': youtube.title, 'description': youtube.description, 'views': youtube.views, 'length': youtube.length, 'user_id': user_id})
 
 
 if __name__ == "__main__":
