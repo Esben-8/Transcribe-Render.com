@@ -9,7 +9,7 @@ import tempfile
 import pytube
 import os
 
-app = Flask(name)
+app = Flask(__name__)
 
 # Connect to Upstash Redis endpoint
 r = redis.Redis(host='eu1-boss-goblin-39389.upstash.io', port=39389, password="aad265ed603b471fa7346db6e5f27066")
