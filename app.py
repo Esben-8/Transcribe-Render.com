@@ -1,28 +1,35 @@
-from flask import Flask, request, jsonify, make_response
+from flask import Flask, request, jsonify
 from pytube import YouTube
 import openai
 import tempfile
 import os
 import traceback
 import logging
+from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
-app.config['DEBUG'] = True
 
-# configure the logging module to write messages to a file
-logging.basicConfig(filename='debug.log', level=logging.DEBUG)
+# Enable CORS for the specific domain
+cors_config = {
+    'origins': 'https://contentchat.co'  # Replace with your front-end domain
+}
+CORS(app, **cors_config)
 
 @app.route("/")
 def hello():
     print("hej")
-    return "Hello"
+    print("med")
+    return "Hello, !"
+
+if __name__ == "__main__":
+    app.run(debug=True)
 
 @app.route("/transcribe", methods=["GET"])
 def transcribe():
     try:
         video_id = str(request.args.get("id"))
-        url = f"https://www.youtube.com/watch?v={video_id}"
-        # print(url)
+        url = f'https://youtube.com/watch?v={video_id}'
+        print(url)
         max_length = int(request.args.get("max_length"))
         apikey = str(request.args.get("api_key"))
         print(apikey)
@@ -31,39 +38,32 @@ def transcribe():
         temp_path = tempfile.gettempdir()
         yt = YouTube(url)
 
-        print("Downloading...")
+        print("Downloading")
         yt.streams.filter(only_audio=True, file_extension="mp4").first().download(output_path=temp_path, filename="temp_audio.mp4")
 
         print(yt.title)
 
         if yt.length < max_length:
-            result = {"Message": "Empty"}
-            
-            with open(os.path.join(temp_path, "temp_audio.mp4"), "rb") as audio_file:
-                # Get the file size in bytes
-                file_size = os.fstat(audio_file.fileno()).st_size
-                print(f"The file size is {file_size} bytes.")
+            audio_file = open(os.path.join(temp_path, "temp_audio.mp4"), "rb")
 
-                # Transcribe the chunk using the OpenAI whisper API
-                print("Transcribing...")
-                transcription = openai.Audio.transcribe("whisper-1", audio_file)
-                print("Process finished")
+            transcription = openai.Audio.transcribe("whisper-1", audio_file)
 
-                result = {
-                    "script": transcription["text"],
-                    "length": yt.length,
-                    "title": yt.title,
-                    "views": yt.views,
-                    "description": yt.description
-                }
+            audio_file.close()
 
-            print(result)
+            result = {
+                "script": transcription["text"],
+                "length": yt.length,
+                "title": yt.title,
+                "views": yt.views,
+                "description": yt.description
+            }
+
             return jsonify(result)
         else:
-            print(f"Video is longer than {int(round(max_length/60, 0))} minutes")
-            return {"Too long": f"Video is longer than {int(round(max_length/60, 0))} minutes"}
+            return f"Video is longer than {int(round(max_length/60, 0))} minutes", 400
 
-        # os.remove(os.path.join(temp_path, "temp_audio.mp4"))
+        os.remove(os.path.join(temp_path, "temp_audio.mp4"))
 
-    except Exception as error:
-        print(error)
+    except Exception as e:
+        traceback.print_exc()
+        return str(e), 500
