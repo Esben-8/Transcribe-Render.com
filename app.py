@@ -11,7 +11,7 @@ app = Flask(__name__)
 
 # Enable CORS for the specific domain
 cors_config = {
-    'origins': 'https://contentchat.co'  # Replace with your front-end domain
+    'origins': ['http://localhost:3000', 'https://contentchat.co']  # Replace with your front-end domain
 }
 CORS(app, **cors_config)
 
