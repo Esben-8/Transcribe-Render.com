@@ -2,4 +2,4 @@ Flask
 Gunicorn
 OpenAI
 PyTube
-pydub
+Flask_cors
